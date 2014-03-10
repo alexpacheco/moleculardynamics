@@ -20,9 +20,6 @@ OBJS = md.o
 
 all : v0 v1 v2 v3 v4 v5 omp
 
-serial : $(OBJS)
-	$(FC) $(FFLAGS) -o md $(OBJS)
-
 v0 : 
 	$(FC) $(FFLAGS) -o md0 md-orig.f90
 
