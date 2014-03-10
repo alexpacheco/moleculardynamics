@@ -1,0 +1,7 @@
+&moldyn
+ npartdim =  10
+ tempK = 10d0
+ nstep = 1000
+ dt = 1d-3
+ pot = "lj"
+/
