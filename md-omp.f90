@@ -21,13 +21,14 @@ end module param
 
 module potential
   use precision
+  use param, only : natom, boxl
   implicit none
   real(dp) :: r2, r6, d2, d
   real(dp), parameter :: de = 0.176d0, a = 1.4d0, re = 1d0
   real(dp) :: exparre
   
 contains
-  subroutine lennard_jones(r,f,p)
+  subroutine lennard_jones(coord, force, pener)
     ! Lennard Jones Potential
     ! V = 4 * epsilon * [ (sigma/r)**12 - (sigma/r)**6 ]
     !   = 4 * epsilon * (sigma/r)**6 * [ (sigma/r)**2 - 1 ]
@@ -35,32 +36,56 @@ contains
     ! F_i = 48 * epsilon * (sigma/r)**6 * (1/r**2) * [ ( sigma/r)** 6 - 0.5 ] * i where i = x,y,z
     !     = 48 * r**(-8) * [ r**(-6) - 0.5 ] * i  for epsilon=sigma=1    implicit none
     implicit none
-    real(dp), dimension(:), intent(in) :: r
-    real(dp), dimension(:), intent(out) :: f
-    real(dp), intent(out) :: p
+    real(dp), dimension(:,:), intent(in) :: coord
+    real(dp), dimension(:,:), intent(out) :: force
+    real(dp), intent(out) :: pener
+    real(dp) :: r(3)
+    integer(ip) :: i, j
+    
+    force = 0d0 ; pener = 0d0
+    !$omp parallel do default(shared) private(r,r2,r6) reduction(+:pener)
+    do i = 1, natom
+       do j = 1, natom
+          if ( i == j ) cycle
+          r(:) = coord(i,:) - coord(j,:)
+          r(:) = r(:) - nint(r(:)/boxl(:)) * boxl(:)
+          r2 = 1.d0 / dot_product(r,r)
+          r6 = r2 ** 3
 
-    r2 = 1.d0 / dot_product(r,r)
-    r6 = r2 ** 3
-
-    f = dvdr_lj(r2, r6) * r
-    p = pot_lj(r2, r6)
+          force(i,:) = force(i,:) + dvdr_lj(r2, r6) * r(:)
+          pener = pener + pot_lj(r2, r6) / 2.d0
+       end do
+    end do
+    !$omp end parallel do
   end subroutine lennard_jones
 
-  subroutine morse(r,f,p)
+  subroutine morse(coord, force, pener)
     ! Morse Potential
     ! V = D * [ 1 - exp(-a*(r - re)) ]^2
     ! F_i = 2*D * [ 1 - exp(-a*(r - re)) ] * a exp(-a*(r-re)) * i / r  
     implicit none
-    real(dp), dimension(:), intent(in) :: r
-    real(dp), dimension(:), intent(out) :: f
-    real(dp), intent(out) :: p
+    real(dp), dimension(:,:), intent(in) :: coord
+    real(dp), dimension(:,:), intent(out) :: force
+    real(dp), intent(out) :: pener
+    real(dp) :: r(3)
+    integer(ip) :: i, j
 
-    d2 = dot_product(r,r)
-    d = sqrt(d2)
-    exparre = exp( -a * (d - re ))
-    
-    f = dvdr_mp(exparre) * r
-    p = pot_mp(exparre)
+    force = 0d0 ; pener = 0d0
+    !$omp parallel do default(shared) private(r,d,d2,exparre) reduction(+:pener)
+    do i = 1, natom
+       do j = 1, natom
+          if ( i == j ) cycle
+          r(:) = coord(i,:) - coord(j,:)
+          r(:) = r(:) - nint(r(:)/boxl(:)) * boxl(:)
+          d2 = dot_product(r,r)
+          d = sqrt(d2)
+          exparre = exp( -a * (d - re ))
+          
+          force(i,:) = force(i,:) + dvdr_mp(exparre) * r(:)
+          pener = pener + pot_mp(exparre) / 2.d0
+       end do
+    end do
+    !$omp end parallel do
   end subroutine morse
 
   function pot_lj(r2, r6)
@@ -341,19 +366,17 @@ end subroutine initialize
   
 subroutine verlet(coord, coord_t0, vel, vel_t0, acc, acc_t0, force, pener)
   use precision
-  use potential
+  use potential, only : lennard_jones, morse
   use param, only : natom, mass, dt, boxl, pot
   implicit none
   real(dp), dimension(:,:), intent(in) :: coord_t0, vel_t0, acc_t0
   real(dp), dimension(:,:), intent(out) :: coord, vel, acc, force
   real(dp), intent(out) :: pener
-  integer(ip) :: i, j, k
-  real(dp) :: epot
-  real(dp) :: r(3), f(3)
-
+  integer(ip) :: i
+  
   ! Set coordinates, velocity, acceleration and force at next time step to zero
-  coord = 0d0 ; vel = 0d0 ; acc = 0d0 ; force = 0d0 
-  pener = 0d0
+  coord = 0d0 ; vel = 0d0 ; acc = 0d0! ; force = 0d0 
+!  pener = 0d0
   
   ! Get new atom positions from Velocity Verlet Algorithm  
   !$omp parallel do default(shared)
@@ -373,26 +396,14 @@ subroutine verlet(coord, coord_t0, vel, vel_t0, acc, acc_t0, force, pener)
   end do
   !$omp end parallel do
 
-  ! Get force at new atom positions
-  !$omp parallel do default(shared) private(r,f,epot) reduction(+:pener)
-  do i = 1, natom
-     do j = 1, natom 
-        if ( i == j ) cycle
-        r(:) = coord(i,:) - coord(j,:)
-        ! minimum image criterion
-        r = r - nint( r / boxl ) * boxl
-        select case(pot)
-        case('mp')
-           call morse( r, f, epot )
-        case default
-           call lennard_jones( r, f, epot )
-        end select
-        pener = pener + epot / 2.d0
-        force(i,:) = force(i,:) + f(:)
-     end do
-  end do
-  !$omp end parallel do
-  
+  ! Get force and potential at new atom positions
+  select case(pot)
+  case('mp')
+     call morse(coord, force, pener)
+  case default
+     call lennard_jones(coord, force, pener)
+  end select
+
   ! Calculate Acceleration and Velocity  at current time step
   !$omp parallel do default(shared)
   do i = 1, natom
@@ -408,20 +419,26 @@ subroutine linearmom(vel)
   use param, only : natom
   implicit none
   real(dp), dimension(:,:), intent(inout) :: vel
-  integer(ip) :: i
+  integer(ip) :: i, j
   real(dp) :: vcm(3)
 
   ! First get center of mass velocity
   vcm = 0d0
+  !$omp parallel do default(shared) reduction(+:vcm)
   do i = 1, 3
-     vcm(i) = sum(vel(:,i))
+     do j = 1, natom
+        vcm(i) = vcm(i) + vel(j,i)
+     end do
   end do
+  !$omp end parallel do
   vcm = vcm / real(natom,dp)
   
   ! Now remove center of mass velocity from all atoms
+  !$omp parallel do default(shared)
   do i = 1, natom
      vel(i,:) = vel(i,:) - vcm(:)
   end do
+  !$omp end parallel do
 
 end subroutine linearmom
 
