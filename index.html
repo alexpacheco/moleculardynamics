@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Molecular-dynamics : Molecular Dynamics code to support training on Fortran, OpenMP and OpenACC programming and Makefile" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Molecular-dynamics</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/alexpacheco/Molecular-Dynamics">View on GitHub</a>
+
+          <h1 id="project_title">Molecular-dynamics</h1>
+          <h2 id="project_tagline">Molecular Dynamics code to support training on Fortran, OpenMP and OpenACC programming and Makefile</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/alexpacheco/Molecular-Dynamics/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/alexpacheco/Molecular-Dynamics/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="molecular-dynamics" class="anchor" href="#molecular-dynamics"><span class="octicon octicon-link"></span></a>Molecular Dynamics</h1>
+
+<h2>
+<a name="general" class="anchor" href="#general"><span class="octicon octicon-link"></span></a>General</h2>
+
+<p>This code supports the training on Modern Fortran, OpenMP and OpenACC 
+that I teach for LSU and LONI HPC users. This code is not for 
+learning Molecular Dynamics (though I might use it in the future). 
+Can also be used for a tutorial on Makefiles. </p>
+
+<h2>
+<a name="objective" class="anchor" href="#objective"><span class="octicon octicon-link"></span></a>Objective</h2>
+
+<p>Take the original code and rewrite using Modern Fortran concepts 
+learned viz,</p>
+
+<ul>
+<li>spit code into smaller subunits: modules, functions and subroutines</li>
+<li>generalize code so that the following parameters are read as input
+
+<ul>
+<li>number of atoms or number of unit cells (you can't do both)</li>
+<li>simulation/equilibration temperature</li>
+<li>number of times steps</li>
+<li>you will need to make use of allocatable arrays</li>
+</ul>
+</li>
+<li>use object oriented concepts such as
+
+<ul>
+<li>derived type data types</li>
+<li>generic procedures and operator overloading</li>
+</ul>
+</li>
+<li>Extra exercise: add another potential e.g. Morse potential for 
+ the simulation</li>
+</ul><p>Parallelize the code using</p>
+
+<ol>
+<li>OpenMP</li>
+<li>OpenACC</li>
+<li>CUDA Fortran (when I learn how to do it)</li>
+</ol><h2>
+<a name="code-description" class="anchor" href="#code-description"><span class="octicon octicon-link"></span></a>Code Description</h2>
+
+<ul>
+<li>Original Code: md-orig.f90
+
+<ul>
+<li>This is the original code that students need to to work on. 
+The Objective is to modify this code using as many features
+as you have grasped.</li>
+</ul>
+</li>
+<li>Modified Code: md-v1.f90
+
+<ul>
+<li>This version splits the original code into many subprograms.</li>
+</ul>
+</li>
+<li>Modified Code: md-v2.f90
+
+<ul>
+<li>This version generalizes the size of the program, reads input 
+parameters and uses allocatable arrays. Arrays are passed as
+explicit shape arrays.</li>
+</ul>
+</li>
+<li>Modified Code: md-v3.f90
+
+<ul>
+<li>In this version, arrays are passed as assumed shape arrays 
+with intent attribute creating a need for interface.</li>
+<li>A module for calculating the potential and force is added.</li>
+<li>Morse potential is also added</li>
+<li>If this is final version, the only thing left for you to 
+learn is Object Oriented concepts. Congratulations!</li>
+</ul>
+</li>
+<li>Modified Code: md-v4.f90
+
+<ul>
+<li>Derived Types for MD variables are introduced.</li>
+</ul>
+</li>
+<li>Oject Oriented Code : md-v5.f90
+
+<ul>
+<li>Adds generic procedures and operator overloading to the 
+md-v4.f90 code. </li>
+<li>If this is your final version, you have learned a lot of
+Modern Fortran Concepts.  Congratulations!</li>
+</ul>
+</li>
+<li>OpenMP Code  : md-omp.f90
+
+<ul>
+<li>Parallelize the md.f90 code using OpenMP directives.</li>
+</ul>
+</li>
+<li>OpenACC Code : md-acc.f90
+
+<ul>
+<li>Parallelize the md.f90 code using OpenACC directives.
+For this code to work, you need to have access to a machine 
+with an accelerator such as NVIDIA GPUs and an OpenACC 
+supported compiler such as Portland Group Compilers. 
+It should work with Cray or CAPS Compilers but I don't 
+have access to one.</li>
+</ul>
+</li>
+</ul><h2>
+<a name="requires" class="anchor" href="#requires"><span class="octicon octicon-link"></span></a>Requires</h2>
+
+<p>Compilers: </p>
+
+<ul>
+<li>gfortran, </li>
+<li>intel fortran or </li>
+<li>portland group compilers</li>
+</ul><p>For OpenACC/CUDA, portland group compilers is required and a machine with
+   NVIDIA GPUs (code is tested on NVIDIA Tesla M2090, don't have access to
+   AMD GPUs)</p>
+
+<h2>
+<a name="compiling" class="anchor" href="#compiling"><span class="octicon octicon-link"></span></a>Compiling</h2>
+
+<pre><code>$ make [option] [COMP=compiler]
+</code></pre>
+
+<p>options: </p>
+
+<ul>
+<li>Serial  : v{0-5}</li>
+<li>OpenMP  : omp</li>
+<li>OpenACC : acc</li>
+</ul><p>compiler:</p>
+
+<ul>
+<li>gfortran : gcc</li>
+<li>intel    : intel</li>
+<li>portland : pgi</li>
+<li>IBM XL   : ibm (Makefile doesn't work on AIX)</li>
+</ul><h2>
+<a name="input-files" class="anchor" href="#input-files"><span class="octicon octicon-link"></span></a>Input Files</h2>
+
+<ul>
+<li>md.inp : Input file for version 2-5, openmmp and openacc (default potential is lj)</li>
+<li>md.in : Input file for version 3-5, openmp and openacc</li>
+</ul><h2>
+<a name="running" class="anchor" href="#running"><span class="octicon octicon-link"></span></a>Running</h2>
+
+<p>Serial Code</p>
+
+<pre><code>$ ./md{0-5} [&lt;input, needed for version 2-5&gt;]
+</code></pre>
+
+<p>OpenMP Code</p>
+
+<pre><code>$ OMP_NUM_THREADS=x ./mdo &lt;input&gt;
+</code></pre>
+
+<p>where x is between 1 and number of processor cores</p>
+
+<p>OpenACC Code</p>
+
+<pre><code>$ ./mda &lt;input&gt;
+</code></pre>
+
+<h2>
+<a name="output-files" class="anchor" href="#output-files"><span class="octicon octicon-link"></span></a>Output Files</h2>
+
+<p>The code will produce output to screen, you can redirect output to a file and analyze the simulation temperature and energy.</p>
+
+<pre><code>$ ./md0 &gt; md.out
+</code></pre>
+
+<p>The code also produces a atom.xyz file with atomic coordinates at each time step.</p>
+
+<h2>
+<a name="visualization-of-md-simulation-using-vmd" class="anchor" href="#visualization-of-md-simulation-using-vmd"><span class="octicon octicon-link"></span></a>Visualization of MD Simulation using VMD</h2>
+
+<p>The VMD script, atom.vmd will read in the atom.xyz file and enable one to view the simulation</p>
+
+<pre><code>$ vmd -e atom.vmd
+</code></pre>
+
+<h2>
+<a name="author" class="anchor" href="#author"><span class="octicon octicon-link"></span></a>Author</h2>
+
+<p>Alex Pacheco, </p>
+
+<p>HPC User Services Consultant,</p>
+
+<p>Louisiana State University</p>
+
+<h2>
+<a name="credits" class="anchor" href="#credits"><span class="octicon octicon-link"></span></a>Credits</h2>
+
+<p>None yet </p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Molecular-dynamics maintained by <a href="https://github.com/alexpacheco">alexpacheco</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
