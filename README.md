@@ -51,7 +51,7 @@ Parallelize the code using
         learn is Object Oriented concepts. Congratulations!
    * Modified Code: md-v4.f90
       + Derived Types for MD variables are introduced.
-   * Oject Oriented Code : md-v5.f90
+   * Object Oriented Code : md-v5.f90
       + Adds generic procedures and operator overloading to the 
         md-v4.f90 code. 
       + If this is your final version, you have learned a lot of
@@ -143,7 +143,4 @@ HPC User Services Consultant,
 
 Louisiana State University
 
-## Credits
-
-None yet 
 
