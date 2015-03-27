@@ -137,10 +137,13 @@ $ vmd -e atom.vmd
 
 ## Author
 
-Alex Pacheco, 
+Alex Pacheco  
+Manager, Research Computing  
+XSEDE Campus Champion  
+Lehigh University
 
-HPC User Services Consultant,
-
+Material Developed as  
+HPC User Services Consultant,    
 Louisiana State University
 
 
