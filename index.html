@@ -1,41 +1,40 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Molecular-dynamics : Molecular Dynamics code to support training on Fortran, OpenMP and OpenACC programming and Makefile" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Molecular-dynamics by alexpacheco</title>
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Molecular-dynamics</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
-
   <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Molecular-dynamics</h1>
+        <p class="header">Molecular Dynamics code to support training on Fortran, OpenMP and OpenACC programming and Makefile</p>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/alexpacheco/Molecular-Dynamics">View on GitHub</a>
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/alexpacheco/Molecular-Dynamics/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/alexpacheco/Molecular-Dynamics/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/alexpacheco/Molecular-Dynamics">View On GitHub</a></li>
+        </ul>
 
-          <h1 id="project_title">Molecular-dynamics</h1>
-          <h2 id="project_tagline">Molecular Dynamics code to support training on Fortran, OpenMP and OpenACC programming and Makefile</h2>
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/alexpacheco">alexpacheco</a></p>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/alexpacheco/Molecular-Dynamics/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/alexpacheco/Molecular-Dynamics/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
+      </header>
+      <section>
         <h1>
-<a name="molecular-dynamics" class="anchor" href="#molecular-dynamics"><span class="octicon octicon-link"></span></a>Molecular Dynamics</h1>
+<a id="molecular-dynamics" class="anchor" href="#molecular-dynamics" aria-hidden="true"><span class="octicon octicon-link"></span></a>Molecular Dynamics</h1>
 
 <h2>
-<a name="general" class="anchor" href="#general"><span class="octicon octicon-link"></span></a>General</h2>
+<a id="general" class="anchor" href="#general" aria-hidden="true"><span class="octicon octicon-link"></span></a>General</h2>
 
 <p>This code supports the training on Modern Fortran, OpenMP and OpenACC 
 that I teach for LSU and LONI HPC users. This code is not for 
@@ -43,7 +42,7 @@ learning Molecular Dynamics (though I might use it in the future).
 Can also be used for a tutorial on Makefiles. </p>
 
 <h2>
-<a name="objective" class="anchor" href="#objective"><span class="octicon octicon-link"></span></a>Objective</h2>
+<a id="objective" class="anchor" href="#objective" aria-hidden="true"><span class="octicon octicon-link"></span></a>Objective</h2>
 
 <p>Take the original code and rewrite using Modern Fortran concepts 
 learned viz,</p>
@@ -68,14 +67,18 @@ learned viz,</p>
 </li>
 <li>Extra exercise: add another potential e.g. Morse potential for 
  the simulation</li>
-</ul><p>Parallelize the code using</p>
+</ul>
+
+<p>Parallelize the code using</p>
 
 <ol>
 <li>OpenMP</li>
 <li>OpenACC</li>
 <li>CUDA Fortran (when I learn how to do it)</li>
-</ol><h2>
-<a name="code-description" class="anchor" href="#code-description"><span class="octicon octicon-link"></span></a>Code Description</h2>
+</ol>
+
+<h2>
+<a id="code-description" class="anchor" href="#code-description" aria-hidden="true"><span class="octicon octicon-link"></span></a>Code Description</h2>
 
 <ul>
 <li>Original Code: md-orig.f90
@@ -143,8 +146,10 @@ It should work with Cray or CAPS Compilers but I don't
 have access to one.</li>
 </ul>
 </li>
-</ul><h2>
-<a name="requires" class="anchor" href="#requires"><span class="octicon octicon-link"></span></a>Requires</h2>
+</ul>
+
+<h2>
+<a id="requires" class="anchor" href="#requires" aria-hidden="true"><span class="octicon octicon-link"></span></a>Requires</h2>
 
 <p>Compilers: </p>
 
@@ -152,12 +157,14 @@ have access to one.</li>
 <li>gfortran, </li>
 <li>intel fortran or </li>
 <li>portland group compilers</li>
-</ul><p>For OpenACC/CUDA, portland group compilers is required and a machine with
+</ul>
+
+<p>For OpenACC/CUDA, portland group compilers is required and a machine with
    NVIDIA GPUs (code is tested on NVIDIA Tesla M2090, don't have access to
    AMD GPUs)</p>
 
 <h2>
-<a name="compiling" class="anchor" href="#compiling"><span class="octicon octicon-link"></span></a>Compiling</h2>
+<a id="compiling" class="anchor" href="#compiling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Compiling</h2>
 
 <pre><code>$ make [option] [COMP=compiler]
 </code></pre>
@@ -168,21 +175,27 @@ have access to one.</li>
 <li>Serial  : v{0-5}</li>
 <li>OpenMP  : omp</li>
 <li>OpenACC : acc</li>
-</ul><p>compiler:</p>
+</ul>
+
+<p>compiler:</p>
 
 <ul>
 <li>gfortran : gcc</li>
 <li>intel    : intel</li>
 <li>portland : pgi</li>
 <li>IBM XL   : ibm (Makefile doesn't work on AIX)</li>
-</ul><h2>
-<a name="input-files" class="anchor" href="#input-files"><span class="octicon octicon-link"></span></a>Input Files</h2>
+</ul>
+
+<h2>
+<a id="input-files" class="anchor" href="#input-files" aria-hidden="true"><span class="octicon octicon-link"></span></a>Input Files</h2>
 
 <ul>
 <li>md.inp : Input file for version 2-5, openmmp and openacc (default potential is lj)</li>
 <li>md.in : Input file for version 3-5, openmp and openacc</li>
-</ul><h2>
-<a name="running" class="anchor" href="#running"><span class="octicon octicon-link"></span></a>Running</h2>
+</ul>
+
+<h2>
+<a id="running" class="anchor" href="#running" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running</h2>
 
 <p>Serial Code</p>
 
@@ -202,7 +215,7 @@ have access to one.</li>
 </code></pre>
 
 <h2>
-<a name="output-files" class="anchor" href="#output-files"><span class="octicon octicon-link"></span></a>Output Files</h2>
+<a id="output-files" class="anchor" href="#output-files" aria-hidden="true"><span class="octicon octicon-link"></span></a>Output Files</h2>
 
 <p>The code will produce output to screen, you can redirect output to a file and analyze the simulation temperature and energy.</p>
 
@@ -212,7 +225,7 @@ have access to one.</li>
 <p>The code also produces a atom.xyz file with atomic coordinates at each time step.</p>
 
 <h2>
-<a name="visualization-of-md-simulation-using-vmd" class="anchor" href="#visualization-of-md-simulation-using-vmd"><span class="octicon octicon-link"></span></a>Visualization of MD Simulation using VMD</h2>
+<a id="visualization-of-md-simulation-using-vmd" class="anchor" href="#visualization-of-md-simulation-using-vmd" aria-hidden="true"><span class="octicon octicon-link"></span></a>Visualization of MD Simulation using VMD</h2>
 
 <p>The VMD script, atom.vmd will read in the atom.xyz file and enable one to view the simulation</p>
 
@@ -220,25 +233,23 @@ have access to one.</li>
 </code></pre>
 
 <h2>
-<a name="author" class="anchor" href="#author"><span class="octicon octicon-link"></span></a>Author</h2>
+<a id="author" class="anchor" href="#author" aria-hidden="true"><span class="octicon octicon-link"></span></a>Author</h2>
 
-<p>Alex Pacheco, </p>
+<p>Alex Pacheco<br>
+Manager, Research Computing<br>
+XSEDE Campus Champion<br>
+Lehigh University</p>
 
-<p>HPC User Services Consultant,</p>
-
-<p>Louisiana State University</p>
+<p>Material Developed as<br>
+HPC User Services Consultant,<br>
+Louisiana State University</p>
       </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Molecular-dynamics maintained by <a href="https://github.com/alexpacheco">alexpacheco</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
       </footer>
     </div>
-
-              <script type="text/javascript">
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		          <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
@@ -248,7 +259,6 @@ have access to one.</li>
             pageTracker._trackPageview();
             } catch(err) {}
           </script>
-
 
   </body>
 </html>
